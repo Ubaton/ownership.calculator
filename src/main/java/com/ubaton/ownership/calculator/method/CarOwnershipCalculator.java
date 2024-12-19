@@ -34,7 +34,11 @@ public class CarOwnershipCalculator {
         double totalInterestPaid = (monthlyInstallment * loanTermYears * 12) - totalLoanAmount;
         double totalInsuranceCost = annualInsuranceCost * loanTermYears;
 
-        return totalLoanAmount + totalInterestPaid + totalInsuranceCost;
+        double totalCostOfOwnership = totalLoanAmount + totalInterestPaid + totalInsuranceCost;
+        double addedPayableAmount = totalCostOfOwnership - carPrice;
+
+        LOGGER.info("Added payable amount for the loan term of " + loanTermYears + " years: R " + df.format(addedPayableAmount));
+        return totalCostOfOwnership;
     }
 
     // Method to get formatted cost breakdown
@@ -62,7 +66,9 @@ public class CarOwnershipCalculator {
                     "Loan Term: " + loanTermYears + " years\n" +
                     "Annual Interest Rate: " + (annualInterestRate * 100) + "%\n" +
                     "Monthly Installment: R " + df.format(monthlyInstallment) + "\n" +
-                    "Total Cost of Ownership: R " + df.format(totalCostOfOwnership);
+                    "Total Cost of Ownership: R " + df.format(totalCostOfOwnership) + "\n" +
+                    "-----------------------------------------------\n" +
+                    "Payable Amount for Loan Term: R " + df.format(totalCostOfOwnership - carPrice);
 
             LOGGER.info("Car ownership cost calculation completed successfully");
             return breakdown;
