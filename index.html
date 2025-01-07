@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Car Ownership Cost Calculator</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Car Ownership Cost Calculator</h1>
+      <form id="calculator-form">
+        <label for="carPrice">Car Price (R):</label>
+        <input type="number" id="carPrice" required />
+
+        <label for="annualInsuranceCost">Annual Insurance Cost (R):</label>
+        <input type="number" id="annualInsuranceCost" required />
+
+        <label for="trackerCost">Tracker Cost (R):</label>
+        <input type="number" id="trackerCost" required />
+
+        <label for="loanTermYears">Loan Term (Years):</label>
+        <input type="number" id="loanTermYears" required />
+
+        <label for="annualInterestRate"
+          >Annual Interest Rate (as a decimal, e.g., 0.0725 for 7.25%):</label
+        >
+        <input type="number" step="0.0001" id="annualInterestRate" required />
+
+        <button type="submit">Calculate</button>
+      </form>
+      <div id="result"></div>
+    </div>
+
+    <script>
+      document
+        .getElementById("calculator-form")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          const carPrice = document.getElementById("carPrice").value;
+          const annualInsuranceCost = document.getElementById(
+            "annualInsuranceCost"
+          ).value;
+          const trackerCost = document.getElementById("trackerCost").value;
+          const loanTermYears = document.getElementById("loanTermYears").value;
+          const annualInterestRate =
+            document.getElementById("annualInterestRate").value;
+
+          fetch("/api/car-ownership/calculate", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              carPrice: parseFloat(carPrice),
+              annualInsuranceCost: parseFloat(annualInsuranceCost),
+              trackerCost: parseFloat(trackerCost),
+              loanTermYears: parseInt(loanTermYears),
+              annualInterestRate: parseFloat(annualInterestRate),
+            }),
+          })
+            .then((response) => response.text())
+            .then((data) => {
+              document.getElementById("result").innerText = data;
+            })
+            .catch((error) => {
+              document.getElementById("result").innerText =
+                "An error occurred: " + error.message;
+            });
+        });
+    </script>
+  </body>
+</html>
